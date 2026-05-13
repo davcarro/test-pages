@@ -1,0 +1,53 @@
+/* Requisiti Business: Sfondo #FFFF00, Testo #0000FF */
+body {
+    background-color: #FFFF00;
+    color: #0000FF;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+}
+
+.container {
+    border: 5px solid #0000FF;
+    padding: 40px;
+    border-radius: 15px;
+}
+
+button {
+    background-color: #0000FF;
+    color: #FFFF00;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+button:hover {
+    background-color: #00008B; /* Blu più scuro al passaggio */
+}
+
+input {
+    padding: 10px;
+    border: 2px solid #0000FF;
+}
+
+footer {
+    margin-top: 50px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+#message {
+    font-weight: bold;
+    margin-top: 15px;
+}
