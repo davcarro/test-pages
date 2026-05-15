@@ -1,39 +1,75 @@
-name: Deploy static content to Pages
+name: CI/CD Pipeline
 
 on:
   push:
     branches: ["main"]
 
-# Implementazione di variabili d'ambiente per la stabilità futura
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 permissions:
   contents: read
+  packages: write
   pages: write
   id-token: write
 
 jobs:
+  # FASE 1: CI - Qualità e Test
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: HTML Hint (Linting)
+        run: |
+          npx htmlhint "**/*.html"
+      
+      - name: Check for broken links (Testing)
+        uses: lycheeverse/lychee-action@v1.9.0
+        with:
+          args: --verbose *.html
+
+  # FASE 2: Containerizzazione (Docker)
+  docker-build:
+    needs: quality-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  # FASE 3: CD - Deploy su GitHub Pages
   deploy:
+    needs: docker-build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # v4 è compatibile con Node 24
-
-      - name: Verify Conventional Commits
-        uses: wagoid/commitlint-github-action@v6 # Aggiornato alla v6 per Node 24
-
+        uses: actions/checkout@v4
+      
       - name: Setup Pages
-        uses: actions/configure-pages@v5 # Verificato per Node 24
+        uses: actions/configure-pages@v5
       
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3 # v3 è la versione stabile supportata
+        uses: actions/upload-pages-artifact@v3
         with:
           path: '.' 
       
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # v4 è la versione stabile per Pages
+        uses: actions/deploy-pages@v4
