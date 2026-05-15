@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      - name: Verify Conventional Commits
+        uses: wagoid/commitlint-github-action@v5 # Uno dei tanti tool disponibili 
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
