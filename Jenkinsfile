@@ -10,14 +10,18 @@ pipeline {
         stage('Simulazione Test') {
             steps {
                 echo 'Eseguo i test unitari...'
-                // Creiamo un finto file di report XML per far felice Jenkins
-                sh '''
-                echo '<?xml version="1.0" encoding="UTF-8"?>
+                // Usiamo "cat" per creare il file in modo sicuro su Linux
+                sh """
+                cat <<EOF > report.xml
+                <?xml version="1.0" encoding="UTF-8"?>
                 <testsuite name="Suite1" tests="2" failures="1">
                     <testcase name="testLogin" classname="LoginTests"/>
-                    <testcase name="testDatabase" classname="DBTests"/>
-                </testsuite>' > report.xml
-                '''
+                    <testcase name="testDatabase" classname="DBTests">
+                        <failure message="Errore di connessione">Il database non risponde al ping.</failure>
+                    </testcase>
+                </testsuite>
+                EOF
+                """
             }
         }
         stage('Pubblicazione Risultati') {
