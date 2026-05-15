@@ -2,7 +2,11 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ["main"] # Si attiva ogni volta che fai push su main
+    branches: ["main"]
+
+# Implementazione di variabili d'ambiente per la stabilità futura
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
 
 permissions:
   contents: read
@@ -17,20 +21,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
-      
+        uses: actions/checkout@v4 # v4 è compatibile con Node 24
+
       - name: Verify Conventional Commits
-        uses: wagoid/commitlint-github-action@v5 # Uno dei tanti tool disponibili 
+        uses: wagoid/commitlint-github-action@v6 # Aggiornato alla v6 per Node 24
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v5 # Verificato per Node 24
       
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v3 # v3 è la versione stabile supportata
         with:
-          # Se i tuoi file sono in una cartella (es. 'dist' o 'public'), cambiala qui:
           path: '.' 
       
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4 # v4 è la versione stabile per Pages
