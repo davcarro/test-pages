@@ -13,7 +13,7 @@ pipeline {
                 // Creiamo un finto file di report XML per far felice Jenkins
                 sh '''
                 echo '<?xml version="1.0" encoding="UTF-8"?>
-                <testsuite name="Suite1" tests="2" failures="0">
+                <testsuite name="Suite1" tests="2" failures="1">
                     <testcase name="testLogin" classname="LoginTests"/>
                     <testcase name="testDatabase" classname="DBTests"/>
                 </testsuite>' > report.xml
