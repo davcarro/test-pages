@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: Verify Conventional Commits
         uses: wagoid/commitlint-github-action@v5 # Uno dei tanti tool disponibili 
@@ -26,11 +26,11 @@ jobs:
         uses: actions/configure-pages@v5
       
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           # Se i tuoi file sono in una cartella (es. 'dist' o 'public'), cambiala qui:
           path: '.' 
       
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
